@@ -11,6 +11,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,20 +35,32 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {
                         Log.d("NET", response);
-                        try {
-                            JSONArray array = new JSONArray(response);
 
-                            for (int i=0;i<array.length();i++)
-                            {
-                                JSONObject obj = array.getJSONObject(i);
-                                mylist.add(obj.getString("district"));
-                            }
+                        Gson gson = new Gson();
+                        Animal[] animals = gson.fromJson(response, Animal[].class);
+
+                        for (int i=0;i< animals.length;i++)
+                        {
+                            mylist.add(animals[i].district);
+                        }
+
+
+//                        try {
+
+
+//                            JSONArray array = new JSONArray(response);
+//
+//                            for (int i=0;i<array.length();i++)
+//                            {
+//                                JSONObject obj = array.getJSONObject(i);
+//                                mylist.add(obj.getString("district") + "," + obj.getString("address"));
+//                            }
                             adapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, mylist);
                             lv.setAdapter(adapter);
 
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
 
 
                     }
